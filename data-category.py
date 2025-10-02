@@ -7,12 +7,14 @@ df = pd.read_csv('booking_data.csv')
 # 범주형 컬럼 리스트
 categorical_columns = [
     'Booking Status',
-    'Vehicle Type',
-    'Reason for cancelling by Customer',
-    'Driver Cancellation Reason',
-    'Incomplete Rides Reason',
-    'Payment Method',
-    'Customer Rating'
+'Vehicle Type',
+'Cancelled Rides by Customer',
+'Reason for cancelling by Customer',
+'Cancelled Rides by Driver',
+'Driver Cancellation Reason',
+'Incomplete Rides',
+'Incomplete Rides Reason',
+'Payment Method'
 ]
 
 # 각 컬럼의 고유값 출력
