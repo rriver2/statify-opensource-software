@@ -8,8 +8,6 @@ df = pd.read_csv('booking_data.csv')
 categorical_columns = [
     'Booking Status',
     'Vehicle Type',
-    'Pickup Location',
-    'Drop Location',
     'Reason for cancelling by Customer',
     'Driver Cancellation Reason',
     'Incomplete Rides Reason',
