@@ -288,7 +288,7 @@ def create_dashboard():
     ax14.invert_yaxis()
 
     # 대시보드를 고해상도 PNG로 저장
-    plt.savefig('comprehensive_dashboard.png', dpi=150, bbox_inches='tight')
+    plt.savefig('gaeun/result/comprehensive_dashboard.png', dpi=150, bbox_inches='tight')
     print("✓ Dashboard 생성 완료")
     print("  → 파일 저장: comprehensive_dashboard.png (이미지 뷰어에서 스크롤하며 확인 가능)")
 

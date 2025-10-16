@@ -413,7 +413,7 @@ def create_comprehensive_dashboard():
     ax13.grid(True, alpha=0.3)
     ax13.set_xticks(range(0, 24, 2))
 
-    plt.savefig('comprehensive_hypothesis_dashboard.png', dpi=150, bbox_inches='tight')
+    plt.savefig('gaeun/result/time-zone-related-hypothesis.png', dpi=150, bbox_inches='tight')
     print("\n✓ Dashboard saved: comprehensive_hypothesis_dashboard.png")
 
 # ============================================
