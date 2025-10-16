@@ -5,7 +5,7 @@ import seaborn as sns
 import numpy as np
 
 # 한글 폰트 설정 (Mac)
-plt.rcParams['font.family'] = 'AppleGothic'
+plt.rcParams['font.family'] = 'Apple SD Gothic Neo'
 plt.rcParams['axes.unicode_minus'] = False
 
 # CSV 파일 읽기
@@ -139,7 +139,7 @@ def create_dashboard():
                                          GAEUN LEE - Comprehensive Booking Data Dashboard
     ═══════════════════════════════════════════════════════════════════════════════════════════════════════════
 
-    총 데이터: {len(df):,} 건  |  거리 평균: {df['Ride Distance (in km)'].mean():.2f} km  |  요금 평균: {df['Booking Value (in INR)'].mean():.2f} INR  |
+    Total Records: {len(df):,} 건  |  distance average: {df['Ride Distance (in km)'].mean():.2f} km  |  the average rate: {df['Booking Value (in INR)'].mean():.2f} INR  |
     Driver Rating: {df['Driver Ratings (1-5 scale)'].mean():.2f}/5.0  |  Customer Rating: {df['Customer Rating (1-5 scale)'].mean():.2f}/5.0
     """
     ax_title.text(0.5, 0.5, stats_text, fontsize=13, verticalalignment='center', horizontalalignment='center',
