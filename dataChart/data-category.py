@@ -2,7 +2,7 @@
 import pandas as pd
 
 # CSV 파일 읽기
-df = pd.read_csv('booking_data.csv')
+df = pd.read_csv('booking_data_default.csv')
 
 # 범주형 컬럼 리스트
 categorical_columns = [
