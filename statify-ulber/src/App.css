@@ -16,7 +16,13 @@
   padding: 30px;
   margin-bottom: 20px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  text-align: center;
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
 }
 
 .app-header h1 {
@@ -30,6 +36,28 @@
   font-size: 16px;
   color: #64748b;
   font-weight: 400;
+}
+
+.refresh-btn {
+  padding: 10px 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.refresh-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 8px rgba(102, 126, 234, 0.4);
+}
+
+.refresh-btn:active {
+  transform: scale(0.98);
 }
 
 /* Loading State */
@@ -66,9 +94,34 @@
   margin-top: 10px;
 }
 
+.loading-subtitle {
+  font-size: 14px;
+  opacity: 0.8;
+  margin-top: 5px;
+}
+
 .error h2 {
   font-size: 24px;
   margin-bottom: 10px;
+}
+
+.retry-btn {
+  margin-top: 20px;
+  padding: 12px 24px;
+  background: white;
+  color: #667eea;
+  border: 2px solid white;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.retry-btn:hover {
+  background: transparent;
+  color: white;
+  border-color: white;
 }
 
 /* Tabs */

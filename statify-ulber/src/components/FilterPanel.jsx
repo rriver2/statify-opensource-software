@@ -1,13 +1,23 @@
 import React, { useState } from 'react';
 import './FilterPanel.css';
 
-const FilterPanel = ({
+const FilterPanel = React.memo(({
   filters,
   onFiltersChange,
   availableOptions,
   onReset
 }) => {
   const [isExpanded, setIsExpanded] = useState(true);
+
+  // Count active filters
+  const activeFilterCount = Object.keys(filters).reduce((count, key) => {
+    const value = filters[key];
+    if (!value) return count;
+    if (Array.isArray(value) && value.length === 0) return count;
+    if (typeof value === 'string' && value === '') return count;
+    if (typeof value === 'number' && value === 0 && !['minDistance', 'minPrice', 'minDriverRating', 'minCustomerRating'].includes(key)) return count;
+    return count + 1;
+  }, 0);
 
   const handleMultiSelectChange = (field, value) => {
     const currentValues = filters[field] || [];
@@ -26,10 +36,47 @@ const FilterPanel = ({
     return (filters[field] || []).includes(value);
   };
 
+  const setDatePreset = (preset) => {
+    const today = new Date();
+    const dateStr = date => date.toISOString().split('T')[0];
+
+    switch(preset) {
+      case 'last7':
+        const last7 = new Date(today);
+        last7.setDate(today.getDate() - 7);
+        onFiltersChange({
+          ...filters,
+          startDate: dateStr(last7),
+          endDate: dateStr(today)
+        });
+        break;
+      case 'last30':
+        const last30 = new Date(today);
+        last30.setDate(today.getDate() - 30);
+        onFiltersChange({
+          ...filters,
+          startDate: dateStr(last30),
+          endDate: dateStr(today)
+        });
+        break;
+      case 'all':
+        const newFilters = { ...filters };
+        delete newFilters.startDate;
+        delete newFilters.endDate;
+        onFiltersChange(newFilters);
+        break;
+    }
+  };
+
   return (
     <div className="filter-panel">
       <div className="filter-header">
-        <h3>Filters</h3>
+        <h3>
+          Filters
+          {activeFilterCount > 0 && (
+            <span className="filter-badge">{activeFilterCount}</span>
+          )}
+        </h3>
         <div className="filter-actions">
           <button onClick={onReset} className="btn-reset">
             Reset All
@@ -60,6 +107,26 @@ const FilterPanel = ({
           {/* Date Range */}
           <div className="filter-section">
             <label className="filter-label">Date Range</label>
+            <div className="date-presets">
+              <button
+                onClick={() => setDatePreset('last7')}
+                className="preset-btn"
+              >
+                Last 7 Days
+              </button>
+              <button
+                onClick={() => setDatePreset('last30')}
+                className="preset-btn"
+              >
+                Last 30 Days
+              </button>
+              <button
+                onClick={() => setDatePreset('all')}
+                className="preset-btn"
+              >
+                All Time
+              </button>
+            </div>
             <div className="date-range">
               <input
                 type="date"
@@ -242,6 +309,8 @@ const FilterPanel = ({
       )}
     </div>
   );
-};
+});
+
+FilterPanel.displayName = 'FilterPanel';
 
 export default FilterPanel;

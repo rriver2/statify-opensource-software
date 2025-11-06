@@ -34,19 +34,20 @@ function App() {
   const [error, setError] = useState(null);
   const [activeTab, setActiveTab] = useState('overview');
 
-  useEffect(() => {
-    const loadData = async () => {
-      try {
-        setLoading(true);
-        const data = await loadBookingData();
-        setRawData(data);
-        setLoading(false);
-      } catch (err) {
-        setError(err.message);
-        setLoading(false);
-      }
-    };
+  const loadData = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const data = await loadBookingData();
+      setRawData(data);
+      setLoading(false);
+    } catch (err) {
+      setError(err.message || 'Failed to load booking data. Please try again.');
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     loadData();
   }, []);
 
@@ -91,6 +92,7 @@ function App() {
         <div className="loading">
           <div className="spinner"></div>
           <p>Loading booking data...</p>
+          <p className="loading-subtitle">This may take a moment for large datasets</p>
         </div>
       </div>
     );
@@ -102,6 +104,9 @@ function App() {
         <div className="error">
           <h2>Error loading data</h2>
           <p>{error}</p>
+          <button onClick={loadData} className="retry-btn">
+            Retry
+          </button>
         </div>
       </div>
     );
@@ -110,10 +115,17 @@ function App() {
   return (
     <div className="app-container">
       <header className="app-header">
-        <h1>Booking Analytics Dashboard</h1>
-        <p className="subtitle">
-          Comprehensive analysis of {rawData.length.toLocaleString()} booking records
-        </p>
+        <div className="header-content">
+          <div>
+            <h1>Booking Analytics Dashboard</h1>
+            <p className="subtitle">
+              Comprehensive analysis of {rawData.length.toLocaleString()} booking records
+            </p>
+          </div>
+          <button onClick={loadData} className="refresh-btn" title="Refresh data">
+            ↻ Refresh
+          </button>
+        </div>
       </header>
 
       <div className="tabs">
@@ -151,6 +163,12 @@ function App() {
               value={`${stats.completionRate}%`}
               subtitle="Successfully completed rides"
               color="#10b981"
+            />
+            <StatsCard
+              title="Cancellation Rate"
+              value={`${stats.cancellationRate}%`}
+              subtitle={`${stats.totalCancelled.toLocaleString()} total cancelled`}
+              color="#ef4444"
             />
             <StatsCard
               title="Total Revenue"
