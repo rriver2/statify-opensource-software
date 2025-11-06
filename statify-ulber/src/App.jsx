@@ -116,13 +116,6 @@ function App() {
         </p>
       </header>
 
-      <FilterPanel
-        filters={filters}
-        onFiltersChange={setFilters}
-        availableOptions={availableOptions}
-        onReset={handleResetFilters}
-      />
-
       <div className="tabs">
         <button
           className={`tab ${activeTab === 'overview' ? 'active' : ''}`}
@@ -216,21 +209,30 @@ function App() {
       )}
 
       {activeTab === 'charts' && (
-        <div className="charts-grid">
-          <BookingStatusChart data={chartData.bookingStatus} />
-          <VehicleTypeChart data={chartData.vehicleType} />
-          <PaymentMethodChart data={chartData.paymentMethod} />
-          <BookingsByHourChart data={chartData.bookingsByHour} />
-          <TopLocationsChart
-            data={chartData.topPickupLocations}
-            title="Top 10 Pickup Locations"
+        
+        <div className="charts-layout">
+          <FilterPanel
+          filters={filters}
+          onFiltersChange={setFilters}
+          availableOptions={availableOptions}
+          onReset={handleResetFilters}
           />
-          <TopLocationsChart
-            data={chartData.topDropLocations}
-            title="Top 10 Drop Locations"
-          />
-          <RevenueByVehicleChart data={chartData.revenueByVehicle} />
-          <BookingsTrendChart data={chartData.bookingsTrend} />
+          <div className="charts-grid">
+            <BookingStatusChart data={chartData.bookingStatus} />
+            <VehicleTypeChart data={chartData.vehicleType} />
+            <PaymentMethodChart data={chartData.paymentMethod} />
+            <BookingsByHourChart data={chartData.bookingsByHour} />
+            <TopLocationsChart
+              data={chartData.topDropLocations}
+              title="Top 10 Drop Locations"
+            />
+
+            <TopLocationsChart
+              data={chartData.topDropLocations}
+              title="Top 10 Pickup Locations"
+            />
+            
+          </div>
         </div>
       )}
 

@@ -66,6 +66,8 @@ const FilterPanel = ({
                 className="filter-input"
                 value={filters.startDate || ''}
                 onChange={(e) => handleInputChange('startDate', e.target.value)}
+                min="2024-01-01"
+                max="2024-12-31"
               />
               <span>to</span>
               <input
@@ -73,6 +75,8 @@ const FilterPanel = ({
                 className="filter-input"
                 value={filters.endDate || ''}
                 onChange={(e) => handleInputChange('endDate', e.target.value)}
+                min="2024-01-01"
+                max="2024-12-31"
               />
             </div>
           </div>

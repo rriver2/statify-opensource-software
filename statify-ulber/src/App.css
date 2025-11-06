@@ -137,6 +137,13 @@
   color: white;
 }
 
+/* Charts layout*/
+.charts-layout{
+    display: grid;
+    grid-template-columns: 27% auto;
+    gap: 20px;
+}
+
 /* Charts Grid */
 .charts-grid {
   display: grid;
