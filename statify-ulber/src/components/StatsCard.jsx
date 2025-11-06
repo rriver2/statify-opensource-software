@@ -1,7 +1,7 @@
 import React from 'react';
 import './StatsCard.css';
 
-const StatsCard = ({ title, value, subtitle, icon, color = '#3b82f6' }) => {
+const StatsCard = React.memo(({ title, value, subtitle, icon, color = '#3b82f6' }) => {
   return (
     <div className="stats-card" style={{ borderLeftColor: color }}>
       <div className="stats-card-header">
@@ -12,6 +12,8 @@ const StatsCard = ({ title, value, subtitle, icon, color = '#3b82f6' }) => {
       {subtitle && <div className="stats-card-subtitle">{subtitle}</div>}
     </div>
   );
-};
+});
+
+StatsCard.displayName = 'StatsCard';
 
 export default StatsCard;
