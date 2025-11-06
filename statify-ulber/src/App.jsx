@@ -160,6 +160,12 @@ function App() {
               color="#10b981"
             />
             <StatsCard
+              title="Cancellation Rate"
+              value={`${stats.cancellationRate}%`}
+              subtitle={`${stats.totalCancelled.toLocaleString()} total cancelled`}
+              color="#ef4444"
+            />
+            <StatsCard
               title="Total Revenue"
               value={`$${parseFloat(stats.totalRevenue).toLocaleString()}`}
               subtitle={`Avg: $${stats.avgRevenue} per ride`}
