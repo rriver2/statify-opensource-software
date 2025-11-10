@@ -151,6 +151,12 @@ function App() {
 
       {activeTab === 'overview' && (
         <>
+        <FilterPanel
+          filters={filters}
+          onFiltersChange={setFilters}
+          availableOptions={availableOptions}
+          onReset={handleResetFilters}
+          />
           <div className="stats-grid">
             <StatsCard
               title="Total Bookings"
@@ -229,12 +235,6 @@ function App() {
       {activeTab === 'charts' && (
         
         <div className="charts-layout">
-          <FilterPanel
-          filters={filters}
-          onFiltersChange={setFilters}
-          availableOptions={availableOptions}
-          onReset={handleResetFilters}
-          />
           <div className="charts-grid">
             <BookingStatusChart data={chartData.bookingStatus} />
             <VehicleTypeChart data={chartData.vehicleType} />
@@ -246,7 +246,7 @@ function App() {
             />
 
             <TopLocationsChart
-              data={chartData.topDropLocations}
+              data={chartData.topPickupLocations}
               title="Top 10 Pickup Locations"
             />
             

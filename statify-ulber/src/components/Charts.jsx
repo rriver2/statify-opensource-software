@@ -112,8 +112,8 @@ export const TopLocationsChart = React.memo(({ data, title }) => {
   return (
     <div className="chart-container">
       <h3 className="chart-title">{title}</h3>
-      <ResponsiveContainer width="100%" height={300}>
-        <BarChart data={data} layout="horizontal">
+      <ResponsiveContainer width="100%" height={1000}>
+        <BarChart data={data} layout="vertical">
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis type="number" />
           <YAxis type="category" dataKey="location" width={120} />
