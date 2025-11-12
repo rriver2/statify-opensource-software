@@ -131,6 +131,7 @@ function App() {
         <div className="header-content">
           <div>
             <h1>Booking Analytics Dashboard</h1>
+            <h3>Team: Statify</h3>
             <p className="subtitle">
               Comprehensive analysis of {rawData.length.toLocaleString()} booking records
             </p>
