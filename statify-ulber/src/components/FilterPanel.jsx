@@ -8,6 +8,66 @@ const FilterPanel = React.memo(({
   onReset
 }) => {
   const [isExpanded, setIsExpanded] = useState(true);
+  
+  const minDistanceValidity = (value) => {
+      const maxDistance = filters.maxDistance;    
+
+      {/* filter NaN */}
+      if(!maxDistance && maxDistance !== 0 ){
+        return value;
+      }
+      
+      if (value > maxDistance){
+          return maxDistance;
+      }
+
+      return value;
+  };
+
+  const maxDistanceValidity = (value) => {
+      const minDistance = filters.minDistance;
+
+      {/* filter NaN */}
+      if(!minDistance && minDistance !== 0){
+          return value;
+      }
+
+      if(value < minDistance){
+        return minDistance;
+      }
+
+      return value;
+  }
+
+  const minPriceValidity = (value) => {
+      const maxPrice = filters.maxPrice;    
+
+      {/* filter NaN */}
+      if(!maxPrice && maxPrice !== 0 ){
+        return value;
+      }
+      
+      if (value > maxPrice){
+          return maxPrice;
+      }
+
+      return value;
+  };
+
+  const maxPriceValidity = (value) => {
+      const minPrice = filters.minPrice;
+
+      {/* filter NaN */}
+      if(!minPrice && minPrice !== 0){
+          return value;
+      }
+
+      if(value < minPrice){
+        return minPrice;
+      }
+
+      return value;
+  }
 
   // Count active filters
   const activeFilterCount = Object.keys(filters).reduce((count, key) => {
@@ -37,9 +97,9 @@ const FilterPanel = React.memo(({
   };
 
   const setDatePreset = (preset) => {
-    const today = new Date();
+    {/* changed today variable's criteria */}
+    const today = new Date(filters.endDate);
     const dateStr = date => date.toISOString().split('T')[0];
-
     switch(preset) {
       case 'last7':
         const last7 = new Date(today);
@@ -63,7 +123,11 @@ const FilterPanel = React.memo(({
         const newFilters = { ...filters };
         delete newFilters.startDate;
         delete newFilters.endDate;
-        onFiltersChange(newFilters);
+        onFiltersChange({
+          ...filters,
+          startDate: "2023-12-31",
+          endDate: "2024-12-31"
+        });
         break;
     }
   };
@@ -237,7 +301,13 @@ const FilterPanel = React.memo(({
                 placeholder="Min"
                 className="filter-input small"
                 value={filters.minDistance || ''}
-                onChange={(e) => handleInputChange('minDistance', e.target.value ? parseFloat(e.target.value) : '')}
+                min={0}
+                max={50}
+                onChange={(e) => 
+                    handleInputChange(
+                      'minDistance', parseFloat(e.target.value) > 0 ? minDistanceValidity(parseFloat(e.target.value)) : '' 
+                  )
+                }
               />
               <span>-</span>
               <input
@@ -245,7 +315,12 @@ const FilterPanel = React.memo(({
                 placeholder="Max"
                 className="filter-input small"
                 value={filters.maxDistance || ''}
-                onChange={(e) => handleInputChange('maxDistance', e.target.value ? parseFloat(e.target.value) : '')}
+                min={0}
+                max={50}
+                onChange={(e) => 
+                  handleInputChange(
+                    'maxDistance', parseFloat(e.target.value) > 0 ? maxDistanceValidity(parseFloat(e.target.value)) : '')
+                }
               />
             </div>
           </div>
@@ -259,7 +334,10 @@ const FilterPanel = React.memo(({
                 placeholder="Min"
                 className="filter-input small"
                 value={filters.minPrice || ''}
-                onChange={(e) => handleInputChange('minPrice', e.target.value ? parseFloat(e.target.value) : '')}
+                onChange={(e) => 
+                  handleInputChange(
+                    'minPrice', parseFloat(e.target.value) > 0 ? minPriceValidity(parseFloat(e.target.value)) : '')
+                }
               />
               <span>-</span>
               <input
@@ -267,7 +345,9 @@ const FilterPanel = React.memo(({
                 placeholder="Max"
                 className="filter-input small"
                 value={filters.maxPrice || ''}
-                onChange={(e) => handleInputChange('maxPrice', e.target.value ? parseFloat(e.target.value) : '')}
+                onChange={(e) => handleInputChange(
+                  'maxPrice', parseFloat(e.target.value) ? maxPriceValidity(parseFloat(e.target.value)) : '')
+                }
               />
             </div>
           </div>
