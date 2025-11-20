@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, act } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import './App.css';
 import { loadBookingData, getUniqueValues } from './utils/dataLoader';
 import { applyFilters } from './utils/filterUtils';
@@ -23,8 +23,7 @@ import {
   PaymentMethodChart,
   BookingsByHourChart,
   TopLocationsChart,
-  RevenueByVehicleChart,
-  BookingsTrendChart
+  RevenueByVehicleChart
 } from './components/Charts';
 
 function App() {
