@@ -10,9 +10,8 @@ const FilterPanel = React.memo(({
   const [isExpanded, setIsExpanded] = useState(true);
   
   const minDistanceValidity = (value) => {
-      const maxDistance = filters.maxDistance;    
+      const maxDistance = filters.maxDistance;
 
-      {/* filter NaN */}
       if(!maxDistance && maxDistance !== 0 ){
         return value;
       }
@@ -27,7 +26,6 @@ const FilterPanel = React.memo(({
   const maxDistanceValidity = (value) => {
       const minDistance = filters.minDistance;
 
-      {/* filter NaN */}
       if(!minDistance && minDistance !== 0){
           return value;
       }
@@ -40,9 +38,8 @@ const FilterPanel = React.memo(({
   }
 
   const minPriceValidity = (value) => {
-      const maxPrice = filters.maxPrice;    
+      const maxPrice = filters.maxPrice;
 
-      {/* filter NaN */}
       if(!maxPrice && maxPrice !== 0 ){
         return value;
       }
@@ -57,7 +54,6 @@ const FilterPanel = React.memo(({
   const maxPriceValidity = (value) => {
       const minPrice = filters.minPrice;
 
-      {/* filter NaN */}
       if(!minPrice && minPrice !== 0){
           return value;
       }

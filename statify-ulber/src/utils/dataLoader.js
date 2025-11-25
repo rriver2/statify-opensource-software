@@ -44,16 +44,3 @@ export const getUniqueValues = (data, field) => {
     .filter(value => value !== null && value !== undefined && value !== '');
   return [...new Set(values)].sort();
 };
-
-export const getDateRange = (data) => {
-  const dates = data
-    .map(item => item.dateTime)
-    .filter(date => date !== null);
-
-  if (dates.length === 0) return { min: null, max: null };
-
-  return {
-    min: new Date(Math.min(...dates)),
-    max: new Date(Math.max(...dates))
-  };
-};
