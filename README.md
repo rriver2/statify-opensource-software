@@ -54,6 +54,7 @@ statify-opensource-software/
 
 React 기반의 인터랙티브 데이터 시각화 대시보드입니다.
 
+
 **기능**:
 - CSV 데이터 로딩 및 파싱
 - 실시간 데이터 필터링
@@ -74,6 +75,24 @@ React 기반의 인터랙티브 데이터 시각화 대시보드입니다.
 - Recharts (차트 라이브러리)
 - PapaParse (CSV 파싱)
 - date-fns (날짜 처리)
+
+#### 스크린샷
+
+**차트 대시보드 - 1**
+
+![Dashboard Charts 1](images/dashboard-charts-1.png)
+
+**차트 대시보드 - 2**
+
+![Dashboard Charts 2](images/dashboard-charts-2.png)
+
+**데이터 테이블**
+
+![Data Table](images/data-table.png)
+
+**필터 패널**
+
+![Filter Panel](images/filter-panel.png)
 
 ### 2. dataChart (데이터 분석)
 
@@ -108,9 +127,6 @@ npm install
 
 # 개발 서버 실행
 npm run dev
-
-# 프로덕션 빌드
-npm run build
 ```
 
 브라우저에서 `http://localhost:5173` (기본 포트)로 접속합니다.
