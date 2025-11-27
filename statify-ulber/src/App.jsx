@@ -247,7 +247,7 @@ function App() {
       {activeTab === 'overview' && (
         <>
           {filteredData.length === 0 ? 0 : (
-            <div className="charts-grid">
+            <div className="overview-charts-grid">
               <BookingStatusChart data={chartData.bookingStatus} />
               <VehicleTypeChart data={chartData.vehicleType} />
               <PaymentMethodChart data={chartData.paymentMethod} />
