@@ -18,10 +18,10 @@ import './Charts.css';
 
 const COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#14b8a6', '#f97316'];
 
-export const BookingStatusChart = React.memo(({ data }) => {
+export const BookingStatusChart = React.memo(({ data, t }) => {
   return (
     <div className="chart-container">
-<h3 className="chart-title">예약 상태 분포</h3>
+<h3 className="chart-title">{t?.bookingStatusDist || '예약 상태 분포'}</h3>
       <ResponsiveContainer width="100%" height={500}>
         <PieChart>
           <Pie
@@ -45,10 +45,10 @@ export const BookingStatusChart = React.memo(({ data }) => {
   );
 });
 
-export const VehicleTypeChart = React.memo(({ data }) => {
+export const VehicleTypeChart = React.memo(({ data, t }) => {
   return (
     <div className="chart-container">
-<h3 className="chart-title">차량 유형별 예약</h3>
+<h3 className="chart-title">{t?.bookingsByVehicle || '차량 유형별 예약'}</h3>
       <ResponsiveContainer width="100%" height={500}>
         <BarChart data={data}>
           <CartesianGrid strokeDasharray="3 3" />
@@ -63,10 +63,10 @@ export const VehicleTypeChart = React.memo(({ data }) => {
   );
 });
 
-export const PaymentMethodChart = React.memo(({ data }) => {
+export const PaymentMethodChart = React.memo(({ data, t }) => {
   return (
     <div className="chart-container">
- <h3 className="chart-title">결제 수단 분포</h3>
+ <h3 className="chart-title">{t?.paymentMethodDist || '결제 수단 분포'}</h3>
       <ResponsiveContainer width="100%" height={500}>
         <PieChart>
           <Pie
@@ -90,10 +90,10 @@ export const PaymentMethodChart = React.memo(({ data }) => {
   );
 });
 
-export const BookingsByHourChart = React.memo(({ data }) => {
+export const BookingsByHourChart = React.memo(({ data, t }) => {
   return (
     <div className="chart-container">
-      <h3 className="chart-title">시간대별 예약</h3>
+      <h3 className="chart-title">{t?.bookingsByHour || '시간대별 예약'}</h3>
       <ResponsiveContainer width="100%" height={500}>
         <LineChart data={data}>
           <CartesianGrid strokeDasharray="3 3" />
@@ -126,10 +126,10 @@ export const TopLocationsChart = React.memo(({ data, title }) => {
   );
 });
 
-export const RevenueByVehicleChart = React.memo(({ data }) => {
+export const RevenueByVehicleChart = React.memo(({ data, t }) => {
   return (
     <div className="chart-container">
-<h3 className="chart-title">차량 유형별 수익 (USD)</h3>
+<h3 className="chart-title">{t?.revenueByVehicle || '차량 유형별 수익 (USD)'}</h3>
       <ResponsiveContainer width="100%" height={500}>
         <BarChart data={data}>
           <CartesianGrid strokeDasharray="3 3" />
@@ -144,13 +144,13 @@ export const RevenueByVehicleChart = React.memo(({ data }) => {
   );
 });
 
-export const BookingsTrendChart = React.memo(({ data }) => {
+export const BookingsTrendChart = React.memo(({ data, t }) => {
   // Take only first 30 dates for better visualization
   const limitedData = data.slice(0, 30);
 
   return (
     <div className="chart-container wide">
-      <h3 className="chart-title">예약 추이 (최근 30일)</h3>
+      <h3 className="chart-title">{t?.bookingsTrend || '예약 추이 (최근 30일)'}</h3>
       <ResponsiveContainer width="100%" height={300}>
         <LineChart data={limitedData}>
           <CartesianGrid strokeDasharray="3 3" />

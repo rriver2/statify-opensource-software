@@ -3,7 +3,7 @@ import { sortData } from '../utils/filterUtils';
 import { exportToCSV, exportToJSON } from '../utils/exportUtils';
 import './DataTable.css';
 
-const DataTable = ({ data }) => {
+const DataTable = ({ data, t }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(50);
   const [sortBy, setSortBy] = useState('Date');
@@ -47,24 +47,24 @@ const DataTable = ({ data }) => {
   };
 
   const columns = [
-    { key: 'Date', label: 'Date' },
-    { key: 'Time', label: 'Time' },
-    { key: 'Booking ID', label: 'Booking ID' },
-    { key: 'Booking Status', label: 'Status' },
-    { key: 'Vehicle Type', label: 'Vehicle' },
-    { key: 'Pickup Location', label: 'Pickup' },
-    { key: 'Drop Location', label: 'Drop' },
-    { key: 'bookingValueUSD', label: 'Price (USD)' },
-    { key: 'rideDistance', label: 'Distance (km)' },
-    { key: 'driverRating', label: 'Driver Rating' },
-    { key: 'customerRating', label: 'Customer Rating' },
-    { key: 'Payment Method', label: 'Payment' }
+    { key: 'Date', label: t?.date || 'Date' },
+    { key: 'Time', label: t?.time || 'Time' },
+    { key: 'Booking ID', label: t?.bookingId || 'Booking ID' },
+    { key: 'Booking Status', label: t?.status || 'Status' },
+    { key: 'Vehicle Type', label: t?.vehicle || 'Vehicle' },
+    { key: 'Pickup Location', label: t?.pickup || 'Pickup' },
+    { key: 'Drop Location', label: t?.drop || 'Drop' },
+    { key: 'bookingValueUSD', label: t?.priceUSD || 'Price (USD)' },
+    { key: 'rideDistance', label: t?.distanceKm || 'Distance (km)' },
+    { key: 'driverRating', label: t?.driverRating || 'Driver Rating' },
+    { key: 'customerRating', label: t?.customerRating || 'Customer Rating' },
+    { key: 'Payment Method', label: t?.payment || 'Payment' }
   ];
 
   return (
     <div className="data-table-container">
       <div className="table-header">
-        <h3>Booking Data ({sortedData.length} records)</h3>
+        <h3>{t?.bookingData || 'Booking Data'} ({sortedData.length}{t?.records || ' records'})</h3>
         <div className="table-actions">
           <select
             value={itemsPerPage}
@@ -74,22 +74,22 @@ const DataTable = ({ data }) => {
             }}
             className="items-per-page-select"
           >
-            <option value={25}>25 per page</option>
-            <option value={50}>50 per page</option>
-            <option value={100}>100 per page</option>
-            <option value={200}>200 per page</option>
+            <option value={25}>25{t?.perPage || ' per page'}</option>
+            <option value={50}>50{t?.perPage || ' per page'}</option>
+            <option value={100}>100{t?.perPage || ' per page'}</option>
+            <option value={200}>200{t?.perPage || ' per page'}</option>
           </select>
           <button
             onClick={() => exportToCSV(sortedData)}
             className="export-btn"
           >
-            Export CSV
+            {t?.exportCSV || 'Export CSV'}
           </button>
           <button
             onClick={() => exportToJSON(sortedData)}
             className="export-btn"
           >
-            Export JSON
+            {t?.exportJSON || 'Export JSON'}
           </button>
         </div>
       </div>
@@ -143,7 +143,7 @@ const DataTable = ({ data }) => {
 
       <div className="table-footer">
         <div className="pagination-info">
-          Showing {startIndex + 1} to {Math.min(endIndex, sortedData.length)} of {sortedData.length} entries
+          {t?.showing || 'Showing'} {startIndex + 1} {t?.to || 'to'} {Math.min(endIndex, sortedData.length)} {t?.of || 'of'} {sortedData.length} {t?.entries || 'entries'}
         </div>
         <div className="pagination">
           <button
