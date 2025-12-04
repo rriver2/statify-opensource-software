@@ -11,8 +11,13 @@ sns.set_style("whitegrid")
 
 # Load CSV file
 print("Loading data...")
-df = pd.read_csv('booking_data_converted.csv')
-print(f"Total records: {len(df):,}\n")
+try:
+    df=pd.read_csv('booking_data_converted.csv')
+    print(f"Total records: {len(df):,}\n")
+except FileNotFoundError:
+    print("Error: booking_data_converted.csv 파일을 찾을 수 없습니다. \
+          CSV 파일이 존재하는지 확인해주세요.")
+    exit(1)
 
 # ============================================
 # 1. Data Preprocessing & Feature Engineering
@@ -413,7 +418,8 @@ def create_comprehensive_dashboard():
     ax13.grid(True, alpha=0.3)
     ax13.set_xticks(range(0, 24, 2))
 
-    plt.savefig('gaeun/result/time-zone-related-hypothesis.png', dpi=150, bbox_inches='tight')
+    #After
+    plt.savefig('gaeun/result/comprehensive_hypothesis_dashboard.png', dpi=150, bbox_inches='tight')
     print("\n✓ Dashboard saved: comprehensive_hypothesis_dashboard.png")
 
 # ============================================
