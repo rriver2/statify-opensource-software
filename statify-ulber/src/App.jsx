@@ -13,6 +13,7 @@ import {
   getBookingsByDate
 } from './utils/statsUtils';
 import { exportStatsToCSV } from './utils/exportUtils';
+import { translations } from './utils/translations';
 
 import StatsCard from './components/StatsCard';
 import FilterPanel from './components/FilterPanel';
@@ -32,6 +33,9 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [activeTab, setActiveTab] = useState('overview');
+  const [lang, setLang] = useState('ko');
+
+  const t = translations[lang];
 
   const loadData = async () => {
     try {
@@ -90,8 +94,8 @@ function App() {
       <div className="app-container">
         <div className="loading">
           <div className="spinner"></div>
-          <p>예약 데이터 로딩 중...</p>
-          <p className="loading-subtitle">대용량 데이터의 경우 시간이 소요될 수 있습니다</p>
+          <p>{t.loadingData}</p>
+          <p className="loading-subtitle">{t.loadingSubtitle}</p>
         </div>
       </div>
     );
@@ -101,10 +105,10 @@ function App() {
     return (
       <div className="app-container">
         <div className="error">
-          <h2>데이터 로딩 오류</h2>
+          <h2>{t.loadError}</h2>
           <p>{error}</p>
           <button onClick={loadData} className="retry-btn">
-            다시 시도
+            {t.retry}
           </button>
         </div>
       </div>
@@ -115,10 +119,10 @@ function App() {
   const NoDataMessage = () => {
     return (
       <div className='no-data-meeage' style={{ padding: '40px', textAlign: 'center', backgroundColor: '#f9fafb', borderRadius: '12px', marginTop: '20px', border: '1px solid #e5e7eb' }} >
-        <h3 style={{ color: '#ef4444', marginBottom: '10px' }}>데이터 없음</h3>
-        <p style={{ color: '#4b5563' }}> 해당되는 데이터가 존재하지 않습니다. 필터를 조정하거나 초기화해 보세요.</p>
+        <h3 style={{ color: '#ef4444', marginBottom: '10px' }}>{t.noData}</h3>
+        <p style={{ color: '#4b5563' }}>{t.noDataMessage}</p>
         <button onClick={handleResetFilters} style={{ marginTop: '20px', padding: '10px 20px', backgroundColor: '#3b82f6', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer', fontSize: '16px' }}>
-          필터 초기화
+          {t.resetFilters}
         </button>
       </div>
     )
@@ -129,15 +133,24 @@ function App() {
       <header className="app-header">
         <div className="header-content">
           <div>
-            <h1>예약 분석 대시보드</h1>
-            <h3>팀: Statify</h3>
+            <h1>{t.dashboardTitle}</h1>
+            <h3>{t.teamName}</h3>
             <p className="subtitle">
-              {rawData.length.toLocaleString()}개의 예약 기록 종합 분석
+              {rawData.length.toLocaleString()}{t.recordsAnalysis}
             </p>
           </div>
-          <button onClick={loadData} className="refresh-btn" title="데이터 새로고침">
-            ↻ 새로고침
-          </button>
+          <div className="header-actions">
+            <button
+              onClick={() => setLang(lang === 'ko' ? 'en' : 'ko')}
+              className="lang-toggle-btn"
+              title={lang === 'ko' ? 'Switch to English' : '한국어로 변경'}
+            >
+              {lang === 'ko' ? '한' : 'EN'}
+            </button>
+            <button onClick={loadData} className="refresh-btn" title={t.refresh}>
+              ↻ {t.refresh}
+            </button>
+          </div>
         </div>
       </header>
 
@@ -146,19 +159,19 @@ function App() {
           className={`tab ${activeTab === 'overview' ? 'active' : ''}`}
           onClick={() => setActiveTab('overview')}
         >
-          개요
+          {t.overview}
         </button>
         <button
           className={`tab ${activeTab === 'charts' ? 'active' : ''}`}
           onClick={() => setActiveTab('charts')}
         >
-          차트
+          {t.charts}
         </button>
         <button
           className={`tab ${activeTab === 'data' ? 'active' : ''}`}
           onClick={() => setActiveTab('data')}
         >
-          데이터 테이블
+          {t.dataTable}
         </button>
       </div>
 
@@ -169,64 +182,65 @@ function App() {
             onFiltersChange={setFilters}
             availableOptions={availableOptions}
             onReset={handleResetFilters}
+            t={t}
           />
 
           {filteredData.length === 0 ? NoDataMessage() : (
             <div className='stats-grid'>
               <StatsCard
-                title="총 예약"
+                title={t.totalBookings}
                 value={stats.totalBookings.toLocaleString()}
-                subtitle={`${stats.completedBookings.toLocaleString()}건 완료됨`}
+                subtitle={`${stats.completedBookings.toLocaleString()}${t.completed}`}
                 color="#3b82f6"
               />
 
               <StatsCard
-                title="완료율"
+                title={t.completionRate}
                 value={`${stats.completionRate}%`}
-                subtitle="성공적으로 완료된 운행"
+                subtitle={t.successfulRides}
                 color="#10b981"
               />
 
               <StatsCard
-                title="취소율"
+                title={t.cancellationRate}
                 value={`${stats.cancellationRate}%`}
-                subtitle={`${stats.totalCancelled.toLocaleString()}건 총 취소`}
+                subtitle={`${stats.totalCancelled.toLocaleString()}${t.totalCancelled}`}
                 color="#ef4444"
               />
               <StatsCard
-                title="총 수익"
+                title={t.totalRevenue}
                 value={`$${parseFloat(stats.totalRevenue).toLocaleString()}`}
-                subtitle={`평균: $${stats.avgRevenue} 운행당`}
+                subtitle={`${lang === 'ko' ? '평균' : 'Avg'}: $${stats.avgRevenue} ${t.avgPerRide}`}
                 color="#f59e0b"
               />
               <StatsCard
-                title="평균 운전자 평점"
+                title={t.avgDriverRating}
                 value={stats.avgDriverRating}
-                subtitle="5.0점 만점"
+                subtitle={t.outOf5}
                 color="#8b5cf6"
               />
               <StatsCard
-                title="평균 고객 평점"
+                title={t.avgCustomerRating}
                 value={stats.avgCustomerRating}
-                subtitle="5.0점 만점"
+                subtitle={t.outOf5}
                 color="#ec4899"
               />
               <StatsCard
-                title="총 거리"
+                title={t.totalDistance}
                 value={`${parseFloat(stats.totalDistance).toLocaleString()} km`}
-                subtitle={`평균: ${stats.avgDistance} km 운행당`}
+                subtitle={`${lang === 'ko' ? '평균' : 'Avg'}: ${stats.avgDistance} km ${t.perRide}`}
                 color="#14b8a6"
               />
               <StatsCard
-                title="고객 취소"
+                title={t.customerCancelled}
                 value={stats.cancelledByCustomer.toLocaleString()}
-                subtitle="고객 취소 건수"
+                subtitle={t.customerCancelledCount}
                 color="#f97316"
               />
               <StatsCard
-                title="운전자 취소"
+                title={t.driverCancelled}
                 value={stats.cancelledByDriver.toLocaleString()}
-                subtitle="운전자 취소 건수"
+                subtitle={t.driverCancelledCount}
                 color="#ef4444"
               />
             </div>
@@ -237,7 +251,7 @@ function App() {
               onClick={() => exportStatsToCSV(stats)}
               className="export-stats-btn"
             >
-              통계 내보내기
+              {t.exportStats}
             </button>
           </div>
         </>
@@ -247,10 +261,10 @@ function App() {
         <>
           {filteredData.length === 0 ? 0 : (
             <div className="overview-charts-grid">
-              <BookingStatusChart data={chartData.bookingStatus} />
-              <VehicleTypeChart data={chartData.vehicleType} />
-              <PaymentMethodChart data={chartData.paymentMethod} />
-              <RevenueByVehicleChart data={chartData.revenueByVehicle} />
+              <BookingStatusChart data={chartData.bookingStatus} t={t} />
+              <VehicleTypeChart data={chartData.vehicleType} t={t} />
+              <PaymentMethodChart data={chartData.paymentMethod} t={t} />
+              <RevenueByVehicleChart data={chartData.revenueByVehicle} t={t} />
             </div>
           )}
         </>
@@ -261,18 +275,18 @@ function App() {
           {filteredData.length === 0 ? NoDataMessage() : (
             <div className="charts-layout">
               <div className="charts-grid">
-                <BookingStatusChart data={chartData.bookingStatus} />
-                <VehicleTypeChart data={chartData.vehicleType} />
-                <PaymentMethodChart data={chartData.paymentMethod} />
-                <BookingsByHourChart data={chartData.bookingsByHour} />
+                <BookingStatusChart data={chartData.bookingStatus} t={t} />
+                <VehicleTypeChart data={chartData.vehicleType} t={t} />
+                <PaymentMethodChart data={chartData.paymentMethod} t={t} />
+                <BookingsByHourChart data={chartData.bookingsByHour} t={t} />
                 <TopLocationsChart
                   data={chartData.topDropLocations}
-                  title="상위 10개 도착 위치"
+                  title={t.topDropLocations}
                 />
 
                 <TopLocationsChart
                   data={chartData.topPickupLocations}
-                  title="상위 10개 픽업 위치"
+                  title={t.topPickupLocations}
                 />
 
               </div>
@@ -281,13 +295,13 @@ function App() {
         </>
       )}
 
-      {activeTab === 'data' && <DataTable data={filteredData} />}
+      {activeTab === 'data' && <DataTable data={filteredData} t={t} />}
 
       <footer className="app-footer">
         <p>
-          {rawData.length.toLocaleString()}개 중 {filteredData.length.toLocaleString()}개의 예약 표시
+          {rawData.length.toLocaleString()}{t.showingOf} {filteredData.length.toLocaleString()}{t.bookingsDisplayed}
         </p>
-        <p>Statify 예약 분석 대시보드 © 2025</p>
+        <p>{t.copyright}</p>
       </footer>
     </div>
   );

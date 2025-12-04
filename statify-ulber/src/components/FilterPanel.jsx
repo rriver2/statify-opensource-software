@@ -5,7 +5,8 @@ const FilterPanel = React.memo(({
   filters,
   onFiltersChange,
   availableOptions,
-  onReset
+  onReset,
+  t
 }) => {
   const [isExpanded, setIsExpanded] = useState(true);
 
@@ -132,14 +133,14 @@ const FilterPanel = React.memo(({
     <div className="filter-panel">
       <div className="filter-header">
         <h3>
-          필터
+          {t?.filters || '필터'}
           {activeFilterCount > 0 && (
             <span className="filter-badge">{activeFilterCount}</span>
           )}
         </h3>
         <div className="filter-actions">
           <button onClick={onReset} className="btn-reset">
-            전체 초기화
+            {t?.resetAll || '전체 초기화'}
           </button>
           <button
             onClick={() => setIsExpanded(!isExpanded)}
@@ -154,11 +155,11 @@ const FilterPanel = React.memo(({
         <div className="filter-content">
           {/* Search */}
           <div className="filter-section">
-            <label className="filter-label">검색</label>
+            <label className="filter-label">{t?.search || '검색'}</label>
             <input
               type="text"
               className="filter-input"
-              placeholder="ID, 위치, 차량으로 검색..."
+              placeholder={t?.searchPlaceholder || 'ID, 위치, 차량으로 검색...'}
               value={filters.searchText || ''}
               onChange={(e) => handleInputChange('searchText', e.target.value)}
             />
@@ -166,25 +167,25 @@ const FilterPanel = React.memo(({
 
           {/* Date Range */}
           <div className="filter-section">
-            <label className="filter-label">날짜 범위</label>
+            <label className="filter-label">{t?.dateRange || '날짜 범위'}</label>
             <div className="date-presets">
               <button
                 onClick={() => setDatePreset('last7')}
                 className="preset-btn"
               >
-                최근 7일
+                {t?.last7Days || '최근 7일'}
               </button>
               <button
                 onClick={() => setDatePreset('last30')}
                 className="preset-btn"
               >
-                최근 30일
+                {t?.last30Days || '최근 30일'}
               </button>
               <button
                 onClick={() => setDatePreset('all')}
                 className="preset-btn"
               >
-                전체 기간
+                {t?.allPeriod || '전체 기간'}
               </button>
             </div>
             <div className="date-range">
@@ -210,7 +211,7 @@ const FilterPanel = React.memo(({
 
           {/* Booking Status */}
           <div className="filter-section">
-            <label className="filter-label">예약 상태</label>
+            <label className="filter-label">{t?.bookingStatus || '예약 상태'}</label>
             <div className="checkbox-group">
               {availableOptions.bookingStatuses?.map(status => (
                 <label key={status} className="checkbox-label">
@@ -227,7 +228,7 @@ const FilterPanel = React.memo(({
 
           {/* Vehicle Type */}
           <div className="filter-section">
-            <label className="filter-label">차량 유형</label>
+            <label className="filter-label">{t?.vehicleType || '차량 유형'}</label>
             <div className="checkbox-group">
               {availableOptions.vehicleTypes?.map(type => (
                 <label key={type} className="checkbox-label">
@@ -244,7 +245,7 @@ const FilterPanel = React.memo(({
 
           {/* Payment Method */}
           <div className="filter-section">
-            <label className="filter-label">결제 수단</label>
+            <label className="filter-label">{t?.paymentMethod || '결제 수단'}</label>
             <div className="checkbox-group">
               {availableOptions.paymentMethods?.map(method => (
                 <label key={method} className="checkbox-label">
@@ -261,7 +262,7 @@ const FilterPanel = React.memo(({
 
           {/* Rating Filters */}
           <div className="filter-section">
-            <label className="filter-label">최소 운전자 평점</label>
+            <label className="filter-label">{t?.minDriverRating || '최소 운전자 평점'}</label>
             <input
               type="range"
               min="0"
@@ -275,7 +276,7 @@ const FilterPanel = React.memo(({
           </div>
 
           <div className="filter-section">
-            <label className="filter-label">최소 고객 평점</label>
+            <label className="filter-label">{t?.minCustomerRating || '최소 고객 평점'}</label>
             <input
               type="range"
               min="0"
@@ -290,11 +291,11 @@ const FilterPanel = React.memo(({
 
           {/* Distance Range */}
           <div className="filter-section">
-            <label className="filter-label">거리 범위 (km)</label>
+            <label className="filter-label">{t?.distanceRange || '거리 범위 (km)'}</label>
             <div className="range-inputs">
               <input
                 type="number"
-                placeholder="최소"
+                placeholder={t?.min || '최소'}
                 className="filter-input small"
                 value={filters.minDistance || ''}
                 min={0}
@@ -308,7 +309,7 @@ const FilterPanel = React.memo(({
               <span>-</span>
               <input
                 type="number"
-                placeholder="최대"
+                placeholder={t?.max || '최대'}
                 className="filter-input small"
                 value={filters.maxDistance || ''}
                 min={0}
@@ -323,11 +324,11 @@ const FilterPanel = React.memo(({
 
           {/* Price Range */}
           <div className="filter-section">
-            <label className="filter-label">가격 범위 (USD)</label>
+            <label className="filter-label">{t?.priceRange || '가격 범위 (USD)'}</label>
             <div className="range-inputs">
               <input
                 type="number"
-                placeholder="최소"
+                placeholder={t?.min || '최소'}
                 className="filter-input small"
                 value={filters.minPrice || ''}
                 onChange={(e) =>
@@ -338,7 +339,7 @@ const FilterPanel = React.memo(({
               <span>-</span>
               <input
                 type="number"
-                placeholder="최대"
+                placeholder={t?.max || '최대'}
                 className="filter-input small"
                 value={filters.maxPrice || ''}
                 onChange={(e) => handleInputChange(
@@ -350,7 +351,7 @@ const FilterPanel = React.memo(({
 
           {/* Top Pickup Locations */}
           <div className="filter-section">
-            <label className="filter-label">픽업 위치 (상위 10개)</label>
+            <label className="filter-label">{t?.pickupLocationTop10 || '픽업 위치 (상위 10개)'}</label>
             <div className="checkbox-group scrollable">
               {availableOptions.pickupLocations?.slice(0, 10).map(location => (
                 <label key={location} className="checkbox-label">
@@ -367,7 +368,7 @@ const FilterPanel = React.memo(({
 
           {/* Top Drop Locations */}
           <div className="filter-section">
-            <label className="filter-label">도착 위치 (상위 10개)</label>
+            <label className="filter-label">{t?.dropLocationTop10 || '도착 위치 (상위 10개)'}</label>
             <div className="checkbox-group scrollable">
               {availableOptions.dropLocations?.slice(0, 10).map(location => (
                 <label key={location} className="checkbox-label">
