@@ -22,7 +22,7 @@ export const BookingStatusChart = React.memo(({ data }) => {
   return (
     <div className="chart-container">
       <h3 className="chart-title">Booking Status Distribution</h3>
-      <ResponsiveContainer width="100%" height={300}>
+      <ResponsiveContainer width="100%" height={500}>
         <PieChart>
           <Pie
             data={data}
@@ -49,7 +49,7 @@ export const VehicleTypeChart = React.memo(({ data }) => {
   return (
     <div className="chart-container">
       <h3 className="chart-title">Bookings by Vehicle Type</h3>
-      <ResponsiveContainer width="100%" height={300}>
+      <ResponsiveContainer width="100%" height={500}>
         <BarChart data={data}>
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="name" angle={-45} textAnchor="end" height={80} />
@@ -67,7 +67,7 @@ export const PaymentMethodChart = React.memo(({ data }) => {
   return (
     <div className="chart-container">
       <h3 className="chart-title">Payment Methods Distribution</h3>
-      <ResponsiveContainer width="100%" height={300}>
+      <ResponsiveContainer width="100%" height={500}>
         <PieChart>
           <Pie
             data={data}
@@ -94,7 +94,7 @@ export const BookingsByHourChart = React.memo(({ data }) => {
   return (
     <div className="chart-container">
       <h3 className="chart-title">Bookings by Hour of Day</h3>
-      <ResponsiveContainer width="100%" height={300}>
+      <ResponsiveContainer width="100%" height={500}>
         <LineChart data={data}>
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="hour" />
@@ -112,7 +112,7 @@ export const TopLocationsChart = React.memo(({ data, title }) => {
   return (
     <div className="chart-container">
       <h3 className="chart-title">{title}</h3>
-      <ResponsiveContainer width="100%" height={1000}>
+      <ResponsiveContainer width="100%" height={500}>
         <BarChart data={data} layout="vertical">
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis type="number" />
@@ -130,7 +130,7 @@ export const RevenueByVehicleChart = React.memo(({ data }) => {
   return (
     <div className="chart-container">
       <h3 className="chart-title">Revenue by Vehicle Type (USD)</h3>
-      <ResponsiveContainer width="100%" height={300}>
+      <ResponsiveContainer width="100%" height={500}>
         <BarChart data={data}>
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="name" angle={-45} textAnchor="end" height={80} />
