@@ -25,6 +25,11 @@ export const calculateStats = (data) => {
     ? ((completedBookings / totalBookings) * 100).toFixed(2)
     : 0;
 
+  const totalCancelled = cancelledByCustomer + cancelledByDriver;
+  const cancellationRate = totalBookings > 0
+    ? ((totalCancelled / totalBookings) * 100).toFixed(2)
+    : 0;
+
   const totalRevenue = data.reduce(
     (sum, item) => sum + (item.bookingValueUSD || 0),
     0
@@ -67,9 +72,11 @@ export const calculateStats = (data) => {
     completedBookings,
     cancelledByCustomer,
     cancelledByDriver,
+    totalCancelled,
     incompleteBookings,
     noDriverFound,
     completionRate,
+    cancellationRate,
     totalRevenue: totalRevenue.toFixed(2),
     avgRevenue,
     avgDriverRating,

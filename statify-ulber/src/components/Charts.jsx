@@ -18,11 +18,11 @@ import './Charts.css';
 
 const COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#14b8a6', '#f97316'];
 
-export const BookingStatusChart = ({ data }) => {
+export const BookingStatusChart = React.memo(({ data }) => {
   return (
     <div className="chart-container">
       <h3 className="chart-title">Booking Status Distribution</h3>
-      <ResponsiveContainer width="100%" height={300}>
+      <ResponsiveContainer width="100%" height={500}>
         <PieChart>
           <Pie
             data={data}
@@ -43,13 +43,13 @@ export const BookingStatusChart = ({ data }) => {
       </ResponsiveContainer>
     </div>
   );
-};
+});
 
-export const VehicleTypeChart = ({ data }) => {
+export const VehicleTypeChart = React.memo(({ data }) => {
   return (
     <div className="chart-container">
       <h3 className="chart-title">Bookings by Vehicle Type</h3>
-      <ResponsiveContainer width="100%" height={300}>
+      <ResponsiveContainer width="100%" height={500}>
         <BarChart data={data}>
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="name" angle={-45} textAnchor="end" height={80} />
@@ -61,13 +61,13 @@ export const VehicleTypeChart = ({ data }) => {
       </ResponsiveContainer>
     </div>
   );
-};
+});
 
-export const PaymentMethodChart = ({ data }) => {
+export const PaymentMethodChart = React.memo(({ data }) => {
   return (
     <div className="chart-container">
       <h3 className="chart-title">Payment Methods Distribution</h3>
-      <ResponsiveContainer width="100%" height={300}>
+      <ResponsiveContainer width="100%" height={500}>
         <PieChart>
           <Pie
             data={data}
@@ -88,13 +88,13 @@ export const PaymentMethodChart = ({ data }) => {
       </ResponsiveContainer>
     </div>
   );
-};
+});
 
-export const BookingsByHourChart = ({ data }) => {
+export const BookingsByHourChart = React.memo(({ data }) => {
   return (
     <div className="chart-container">
       <h3 className="chart-title">Bookings by Hour of Day</h3>
-      <ResponsiveContainer width="100%" height={300}>
+      <ResponsiveContainer width="100%" height={500}>
         <LineChart data={data}>
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="hour" />
@@ -106,14 +106,14 @@ export const BookingsByHourChart = ({ data }) => {
       </ResponsiveContainer>
     </div>
   );
-};
+});
 
-export const TopLocationsChart = ({ data, title }) => {
+export const TopLocationsChart = React.memo(({ data, title }) => {
   return (
     <div className="chart-container">
       <h3 className="chart-title">{title}</h3>
-      <ResponsiveContainer width="100%" height={300}>
-        <BarChart data={data} layout="horizontal">
+      <ResponsiveContainer width="100%" height={500}>
+        <BarChart data={data} layout="vertical">
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis type="number" />
           <YAxis type="category" dataKey="location" width={120} />
@@ -124,13 +124,13 @@ export const TopLocationsChart = ({ data, title }) => {
       </ResponsiveContainer>
     </div>
   );
-};
+});
 
-export const RevenueByVehicleChart = ({ data }) => {
+export const RevenueByVehicleChart = React.memo(({ data }) => {
   return (
     <div className="chart-container">
       <h3 className="chart-title">Revenue by Vehicle Type (USD)</h3>
-      <ResponsiveContainer width="100%" height={300}>
+      <ResponsiveContainer width="100%" height={500}>
         <BarChart data={data}>
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="name" angle={-45} textAnchor="end" height={80} />
@@ -142,9 +142,9 @@ export const RevenueByVehicleChart = ({ data }) => {
       </ResponsiveContainer>
     </div>
   );
-};
+});
 
-export const BookingsTrendChart = ({ data }) => {
+export const BookingsTrendChart = React.memo(({ data }) => {
   // Take only first 30 dates for better visualization
   const limitedData = data.slice(0, 30);
 
@@ -168,4 +168,5 @@ export const BookingsTrendChart = ({ data }) => {
       </ResponsiveContainer>
     </div>
   );
-};
+});
+

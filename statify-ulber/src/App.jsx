@@ -23,8 +23,7 @@ import {
   PaymentMethodChart,
   BookingsByHourChart,
   TopLocationsChart,
-  RevenueByVehicleChart,
-  BookingsTrendChart
+  RevenueByVehicleChart
 } from './components/Charts';
 
 function App() {
@@ -34,19 +33,20 @@ function App() {
   const [error, setError] = useState(null);
   const [activeTab, setActiveTab] = useState('overview');
 
-  useEffect(() => {
-    const loadData = async () => {
-      try {
-        setLoading(true);
-        const data = await loadBookingData();
-        setRawData(data);
-        setLoading(false);
-      } catch (err) {
-        setError(err.message);
-        setLoading(false);
-      }
-    };
+  const loadData = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const data = await loadBookingData();
+      setRawData(data);
+      setLoading(false);
+    } catch (err) {
+      setError(err.message || 'Failed to load booking data. Please try again.');
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     loadData();
   }, []);
 
@@ -91,6 +91,7 @@ function App() {
         <div className="loading">
           <div className="spinner"></div>
           <p>Loading booking data...</p>
+          <p className="loading-subtitle">This may take a moment for large datasets</p>
         </div>
       </div>
     );
@@ -102,26 +103,43 @@ function App() {
         <div className="error">
           <h2>Error loading data</h2>
           <p>{error}</p>
+          <button onClick={loadData} className="retry-btn">
+            Retry
+          </button>
         </div>
       </div>
     );
   }
 
+  // 데이터길이가 0일 때 메시지 출력
+  const NoDataMessage = () => {
+    return (
+      <div className='no-data-meeage' style={{ padding: '40px', textAlign: 'center', backgroundColor: '#f9fafb', borderRadius: '12px', marginTop: '20px', border: '1px solid #e5e7eb' }} >
+        <h3 style={{ color: '#ef4444', marginBottom: '10px' }}>데이터 없음</h3>
+        <p style={{ color: '#4b5563' }}> 해당되는 데이터가 존재하지 않습니다. 필터를 조정하거나 초기화해 보세요.</p>
+        <button onClick={handleResetFilters} style={{ marginTop: '20px', padding: '10px 20px', backgroundColor: '#3b82f6', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer', fontSize: '16px' }}>
+          필터 초기화
+        </button>
+      </div>
+    )
+  }
+
   return (
     <div className="app-container">
       <header className="app-header">
-        <h1>Booking Analytics Dashboard</h1>
-        <p className="subtitle">
-          Comprehensive analysis of {rawData.length.toLocaleString()} booking records
-        </p>
+        <div className="header-content">
+          <div>
+            <h1>Booking Analytics Dashboard</h1>
+            <h3>Team: Statify</h3>
+            <p className="subtitle">
+              Comprehensive analysis of {rawData.length.toLocaleString()} booking records
+            </p>
+          </div>
+          <button onClick={loadData} className="refresh-btn" title="Refresh data">
+            ↻ Refresh
+          </button>
+        </div>
       </header>
-
-      <FilterPanel
-        filters={filters}
-        onFiltersChange={setFilters}
-        availableOptions={availableOptions}
-        onReset={handleResetFilters}
-      />
 
       <div className="tabs">
         <button
@@ -146,56 +164,73 @@ function App() {
 
       {activeTab === 'overview' && (
         <>
-          <div className="stats-grid">
-            <StatsCard
-              title="Total Bookings"
-              value={stats.totalBookings.toLocaleString()}
-              subtitle={`${stats.completedBookings.toLocaleString()} completed`}
-              color="#3b82f6"
-            />
-            <StatsCard
-              title="Completion Rate"
-              value={`${stats.completionRate}%`}
-              subtitle="Successfully completed rides"
-              color="#10b981"
-            />
-            <StatsCard
-              title="Total Revenue"
-              value={`$${parseFloat(stats.totalRevenue).toLocaleString()}`}
-              subtitle={`Avg: $${stats.avgRevenue} per ride`}
-              color="#f59e0b"
-            />
-            <StatsCard
-              title="Avg Driver Rating"
-              value={stats.avgDriverRating}
-              subtitle="Out of 5.0"
-              color="#8b5cf6"
-            />
-            <StatsCard
-              title="Avg Customer Rating"
-              value={stats.avgCustomerRating}
-              subtitle="Out of 5.0"
-              color="#ec4899"
-            />
-            <StatsCard
-              title="Total Distance"
-              value={`${parseFloat(stats.totalDistance).toLocaleString()} km`}
-              subtitle={`Avg: ${stats.avgDistance} km per ride`}
-              color="#14b8a6"
-            />
-            <StatsCard
-              title="Cancelled by Customer"
-              value={stats.cancelledByCustomer.toLocaleString()}
-              subtitle="Customer cancellations"
-              color="#f97316"
-            />
-            <StatsCard
-              title="Cancelled by Driver"
-              value={stats.cancelledByDriver.toLocaleString()}
-              subtitle="Driver cancellations"
-              color="#ef4444"
-            />
-          </div>
+        <FilterPanel
+          filters={filters}
+          onFiltersChange={setFilters}
+          availableOptions={availableOptions}
+          onReset={handleResetFilters}
+          />
+          
+          {filteredData.length === 0 ? NoDataMessage() : (
+              <div className='stats-grid'>
+                <StatsCard
+                  title="Total Bookings"
+                  value={stats.totalBookings.toLocaleString()}
+                  subtitle={`${stats.completedBookings.toLocaleString()} completed`}
+                  color="#3b82f6"
+                />
+
+                <StatsCard
+                  title="Completion Rate"
+                  value={`${stats.completionRate}%`}
+                  subtitle="Successfully completed rides"
+                  color="#10b981"
+                />
+
+                <StatsCard
+                  title="Cancellation Rate"
+                  value={`${stats.cancellationRate}%`}
+                  subtitle={`${stats.totalCancelled.toLocaleString()} total cancelled`}
+                  color="#ef4444"
+                />
+                <StatsCard
+                  title="Total Revenue"
+                  value={`$${parseFloat(stats.totalRevenue).toLocaleString()}`}
+                  subtitle={`Avg: $${stats.avgRevenue} per ride`}
+                  color="#f59e0b"
+                />
+                <StatsCard
+                  title="Avg Driver Rating"
+                  value={stats.avgDriverRating}
+                  subtitle="Out of 5.0"
+                  color="#8b5cf6"
+                />
+                <StatsCard
+                  title="Avg Customer Rating"
+                  value={stats.avgCustomerRating}
+                  subtitle="Out of 5.0"
+                  color="#ec4899"
+                />
+                <StatsCard
+                  title="Total Distance"
+                  value={`${parseFloat(stats.totalDistance).toLocaleString()} km`}
+                  subtitle={`Avg: ${stats.avgDistance} km per ride`}
+                  color="#14b8a6"
+                />
+                <StatsCard
+                  title="Cancelled by Customer"
+                  value={stats.cancelledByCustomer.toLocaleString()}
+                  subtitle="Customer cancellations"
+                  color="#f97316"
+                />
+                <StatsCard
+                  title="Cancelled by Driver"
+                  value={stats.cancelledByDriver.toLocaleString()}
+                  subtitle="Driver cancellations"
+                  color="#ef4444"
+                />
+              </div>
+          )}
 
           <div className="export-stats-section">
             <button
@@ -205,33 +240,45 @@ function App() {
               Export Statistics
             </button>
           </div>
+        </>
+      )}
 
-          <div className="charts-grid">
-            <BookingStatusChart data={chartData.bookingStatus} />
-            <VehicleTypeChart data={chartData.vehicleType} />
-            <PaymentMethodChart data={chartData.paymentMethod} />
-            <RevenueByVehicleChart data={chartData.revenueByVehicle} />
-          </div>
+      {activeTab === 'overview' && (
+        <>
+          {filteredData.length === 0 ? 0 : (
+            <div className="overview-charts-grid">
+              <BookingStatusChart data={chartData.bookingStatus} />
+              <VehicleTypeChart data={chartData.vehicleType} />
+              <PaymentMethodChart data={chartData.paymentMethod} />
+              <RevenueByVehicleChart data={chartData.revenueByVehicle} />
+            </div>
+          )}
         </>
       )}
 
       {activeTab === 'charts' && (
-        <div className="charts-grid">
-          <BookingStatusChart data={chartData.bookingStatus} />
-          <VehicleTypeChart data={chartData.vehicleType} />
-          <PaymentMethodChart data={chartData.paymentMethod} />
-          <BookingsByHourChart data={chartData.bookingsByHour} />
-          <TopLocationsChart
-            data={chartData.topPickupLocations}
-            title="Top 10 Pickup Locations"
-          />
-          <TopLocationsChart
-            data={chartData.topDropLocations}
-            title="Top 10 Drop Locations"
-          />
-          <RevenueByVehicleChart data={chartData.revenueByVehicle} />
-          <BookingsTrendChart data={chartData.bookingsTrend} />
-        </div>
+        <>
+          {filteredData.length === 0 ? NoDataMessage() : (
+            <div className="charts-layout">
+              <div className="charts-grid">
+                <BookingStatusChart data={chartData.bookingStatus} />
+                <VehicleTypeChart data={chartData.vehicleType} />
+                <PaymentMethodChart data={chartData.paymentMethod} />
+                <BookingsByHourChart data={chartData.bookingsByHour} />
+                <TopLocationsChart
+                  data={chartData.topDropLocations}
+                  title="Top 10 Drop Locations"
+                />
+
+                <TopLocationsChart
+                  data={chartData.topPickupLocations}
+                  title="Top 10 Pickup Locations"
+                />
+                
+              </div>
+            </div>
+          )}
+        </>
       )}
 
       {activeTab === 'data' && <DataTable data={filteredData} />}

@@ -1,13 +1,79 @@
 import React, { useState } from 'react';
 import './FilterPanel.css';
 
-const FilterPanel = ({
+const FilterPanel = React.memo(({
   filters,
   onFiltersChange,
   availableOptions,
   onReset
 }) => {
   const [isExpanded, setIsExpanded] = useState(true);
+  
+  const minDistanceValidity = (value) => {
+      const maxDistance = filters.maxDistance;
+
+      if(!maxDistance && maxDistance !== 0 ){
+        return value;
+      }
+      
+      if (value > maxDistance){
+          return maxDistance;
+      }
+
+      return value;
+  };
+
+  const maxDistanceValidity = (value) => {
+      const minDistance = filters.minDistance;
+
+      if(!minDistance && minDistance !== 0){
+          return value;
+      }
+
+      if(value < minDistance){
+        return minDistance;
+      }
+
+      return value;
+  }
+
+  const minPriceValidity = (value) => {
+      const maxPrice = filters.maxPrice;
+
+      if(!maxPrice && maxPrice !== 0 ){
+        return value;
+      }
+      
+      if (value > maxPrice){
+          return maxPrice;
+      }
+
+      return value;
+  };
+
+  const maxPriceValidity = (value) => {
+      const minPrice = filters.minPrice;
+
+      if(!minPrice && minPrice !== 0){
+          return value;
+      }
+
+      if(value < minPrice){
+        return minPrice;
+      }
+
+      return value;
+  }
+
+  // Count active filters
+  const activeFilterCount = Object.keys(filters).reduce((count, key) => {
+    const value = filters[key];
+    if (!value) return count;
+    if (Array.isArray(value) && value.length === 0) return count;
+    if (typeof value === 'string' && value === '') return count;
+    if (typeof value === 'number' && value === 0 && !['minDistance', 'minPrice', 'minDriverRating', 'minCustomerRating'].includes(key)) return count;
+    return count + 1;
+  }, 0);
 
   const handleMultiSelectChange = (field, value) => {
     const currentValues = filters[field] || [];
@@ -26,10 +92,51 @@ const FilterPanel = ({
     return (filters[field] || []).includes(value);
   };
 
+  const setDatePreset = (preset) => {
+    {/* changed today variable's criteria */}
+    const today = new Date(filters.endDate);
+    const dateStr = date => date.toISOString().split('T')[0];
+    switch(preset) {
+      case 'last7':
+        const last7 = new Date(today);
+        last7.setDate(today.getDate() - 7);
+        onFiltersChange({
+          ...filters,
+          startDate: dateStr(last7),
+          endDate: dateStr(today)
+        });
+        break;
+      case 'last30':
+        const last30 = new Date(today);
+        last30.setDate(today.getDate() - 30);
+        onFiltersChange({
+          ...filters,
+          startDate: dateStr(last30),
+          endDate: dateStr(today)
+        });
+        break;
+      case 'all':
+        const newFilters = { ...filters };
+        delete newFilters.startDate;
+        delete newFilters.endDate;
+        onFiltersChange({
+          ...filters,
+          startDate: "2023-12-31",
+          endDate: "2024-12-31"
+        });
+        break;
+    }
+  };
+
   return (
     <div className="filter-panel">
       <div className="filter-header">
-        <h3>Filters</h3>
+        <h3>
+          Filters
+          {activeFilterCount > 0 && (
+            <span className="filter-badge">{activeFilterCount}</span>
+          )}
+        </h3>
         <div className="filter-actions">
           <button onClick={onReset} className="btn-reset">
             Reset All
@@ -60,12 +167,34 @@ const FilterPanel = ({
           {/* Date Range */}
           <div className="filter-section">
             <label className="filter-label">Date Range</label>
+            <div className="date-presets">
+              <button
+                onClick={() => setDatePreset('last7')}
+                className="preset-btn"
+              >
+                Last 7 Days
+              </button>
+              <button
+                onClick={() => setDatePreset('last30')}
+                className="preset-btn"
+              >
+                Last 30 Days
+              </button>
+              <button
+                onClick={() => setDatePreset('all')}
+                className="preset-btn"
+              >
+                All Time
+              </button>
+            </div>
             <div className="date-range">
               <input
                 type="date"
                 className="filter-input"
                 value={filters.startDate || ''}
                 onChange={(e) => handleInputChange('startDate', e.target.value)}
+                min="2024-01-01"
+                max="2024-12-31"
               />
               <span>to</span>
               <input
@@ -73,6 +202,8 @@ const FilterPanel = ({
                 className="filter-input"
                 value={filters.endDate || ''}
                 onChange={(e) => handleInputChange('endDate', e.target.value)}
+                min="2024-01-01"
+                max="2024-12-31"
               />
             </div>
           </div>
@@ -166,7 +297,13 @@ const FilterPanel = ({
                 placeholder="Min"
                 className="filter-input small"
                 value={filters.minDistance || ''}
-                onChange={(e) => handleInputChange('minDistance', e.target.value ? parseFloat(e.target.value) : '')}
+                min={0}
+                max={50}
+                onChange={(e) => 
+                    handleInputChange(
+                      'minDistance', parseFloat(e.target.value) > 0 ? minDistanceValidity(parseFloat(e.target.value)) : '' 
+                  )
+                }
               />
               <span>-</span>
               <input
@@ -174,7 +311,12 @@ const FilterPanel = ({
                 placeholder="Max"
                 className="filter-input small"
                 value={filters.maxDistance || ''}
-                onChange={(e) => handleInputChange('maxDistance', e.target.value ? parseFloat(e.target.value) : '')}
+                min={0}
+                max={50}
+                onChange={(e) => 
+                  handleInputChange(
+                    'maxDistance', parseFloat(e.target.value) > 0 ? maxDistanceValidity(parseFloat(e.target.value)) : '')
+                }
               />
             </div>
           </div>
@@ -188,7 +330,10 @@ const FilterPanel = ({
                 placeholder="Min"
                 className="filter-input small"
                 value={filters.minPrice || ''}
-                onChange={(e) => handleInputChange('minPrice', e.target.value ? parseFloat(e.target.value) : '')}
+                onChange={(e) => 
+                  handleInputChange(
+                    'minPrice', parseFloat(e.target.value) > 0 ? minPriceValidity(parseFloat(e.target.value)) : '')
+                }
               />
               <span>-</span>
               <input
@@ -196,7 +341,9 @@ const FilterPanel = ({
                 placeholder="Max"
                 className="filter-input small"
                 value={filters.maxPrice || ''}
-                onChange={(e) => handleInputChange('maxPrice', e.target.value ? parseFloat(e.target.value) : '')}
+                onChange={(e) => handleInputChange(
+                  'maxPrice', parseFloat(e.target.value) ? maxPriceValidity(parseFloat(e.target.value)) : '')
+                }
               />
             </div>
           </div>
@@ -238,6 +385,8 @@ const FilterPanel = ({
       )}
     </div>
   );
-};
+});
+
+FilterPanel.displayName = 'FilterPanel';
 
 export default FilterPanel;
